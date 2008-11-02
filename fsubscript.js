@@ -78,9 +78,6 @@
         }
     }
     function execInvoke(path) {
-        //displayBalloonMessage("invoke : "+execComplete(path));
-        execComplete(path);        
-
         var cmdLine="a \""+r[3].value+"\" -r ";//+r[1].value.join("\" ").replace(/;/g,"")+"\"";
         for(var i=0;i<r[1].value.length;i++) {
             if(r[1].value[i]==";")
@@ -102,7 +99,7 @@
 
     plugins["FZip"]={
         aliasstr:"zip",
-        version:"v0.1.0",
+        version:"v0.2.0",
         lastChange:"Nov 30st 2008",
         displayName:"Zipper",
         directory:currentDirectory,
@@ -111,7 +108,7 @@
         search:function(querykey, explicit, queryraw, modifier, triggermethod) {
             if(queryraw.indexOf("+invoke")!=-1) {       
                 var file=queryraw.replace("+invoke","")
-                FARR.emitResult(querykey,FARR.getQueryString(), file, this.icon,UNKNOWN,IMMEDIATE_DISPLAY,-1);
+                FARR.emitResult(querykey,FARR.getQueryString(), file, this.icon,UNKNOWN,IMMEDIATE_DISPLAY,2);
             }
 
             if(!explicit) return;
@@ -132,10 +129,8 @@
             if(entrytype==FOLDER)
                 path+="\\";
 
-            var hasCtrl=(FARR.getKeyState(0x11)&0x8000)!=0;
-            if(hasCtrl)
-                restartSearch(execComplete(path));            
-            else
+            restartSearch(execComplete(path));
+            if(r.length==4)
                 execInvoke(path);
             return HANDLED;
         },
